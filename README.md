@@ -29,6 +29,7 @@ Everything is in the repo , so just drop the files to where you want to use it.
 
 ## Usage
 
+```
 usage: pscanner.py [-h] -i INPUT -o OUTPUT -p PORT -s SSL
 
 Port Scanner v0.99
@@ -41,8 +42,7 @@ optional arguments:
                         Output
   -p PORT, --port PORT  Port number(s)
   -s SSL, --ssl SSL     SSL yes|no
-
-
+```
 
 ## Website
 
