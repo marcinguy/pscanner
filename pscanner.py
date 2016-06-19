@@ -8,8 +8,6 @@ __author__ = "Marcin Kozlowski <marcinguy@gmail.com>"
 import argparse
 
 import multiprocessing
-from textwrap import dedent
-from itertools import izip_longest
 
 import ssl
 import socket
@@ -18,10 +16,7 @@ from socket import gethostbyname, gaierror
 from dns import reversename, resolver, exception
 import sys
 
-import pprint
 import M2Crypto
-import time
-import random
 from embparpbar import ProgressPool
 from progressbar import ProgressBar, RotatingMarker, ETA
 
@@ -110,11 +105,6 @@ def getrev(ip):
         return "Unhandled exception"
 
 
-def grouper(n, iterable, padvalue=None):
-	"""grouper(3, 'abcdefg', 'x') -->
-	('a','b','c'), ('d','e','f'), ('g','x','x')"""
-
-	return izip_longest(*[iter(iterable)]*n, fillvalue=padvalue)
 
 if __name__ == '__main__':
         parser = argparse.ArgumentParser(description='Port Scanner v0.99')
@@ -136,4 +126,4 @@ if __name__ == '__main__':
         results = ppool.map(scan, data, pbar="Scanning")
         resfile = open(output,'w') 
 	for r in results:
-          resfile.write(r+"\n") # replace with outfile.write()
+          resfile.write(r+"\n") 
