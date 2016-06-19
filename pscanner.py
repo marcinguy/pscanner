@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+""" Parallel IP scanner with progressbar and SSL support  """
+
+__author__ = "Marcin Kozlowski <marcinguy@gmail.com>"
+
 import argparse
 
 import multiprocessing
