@@ -15,11 +15,12 @@ or
 
 pip install progressbar
 
-2) embparpbar.py
+2) * [embparpbar.py](https://github.com/esc/embparpbar/)
+
+Available in the package
 
 3) pip install requests (for the Certificate bundle)
 
-Available in the package
 
 
 ## Installation
