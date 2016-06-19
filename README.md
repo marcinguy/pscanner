@@ -17,6 +17,8 @@ pip install progressbar
 
 2) embparpbar.py
 
+3) pip install requests (for the Certificate bundle)
+
 Available in the package
 
 
