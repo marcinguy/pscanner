@@ -37,18 +37,21 @@ def scan(d):
           except Exception, e:
                 message = "Error: "+d.rstrip()+","+getrev(d)
                 message += str(e)
+                try: 
+                  cert = ssl.get_server_certificate((d.rstrip(), 443), ssl_version=ssl.PROTOCOL_TLSv1)
+                  x509 = M2Crypto.X509.load_cert_string(cert)
+                  r = x509.get_subject().as_text()
+                  val = r.split(",")
+                  for i, j in enumerate(val):
+                    if j.find("CN=") != -1:
+                      val[i]=j.replace("CN=","")
+                      val[i]=val[i].strip()
                 
-                cert = ssl.get_server_certificate((d.rstrip(), 443), ssl_version=ssl.PROTOCOL_TLSv1)
-                x509 = M2Crypto.X509.load_cert_string(cert)
-                r = x509.get_subject().as_text()
-                val = r.split(",")
-                for i, j in enumerate(val):
-                  if j.find("CN=") != -1:
-                    val[i]=j.replace("CN=","")
-                    val[i]=val[i].strip()
-                
-                message += ","+val[i]
-                return message
+                  message += ","+val[i]
+                  return message
+                except Exception, e:
+                       print str(e)
+                       return d.rstrip()+","+getrev(d)+","+"CERT ERROR!"
           except ssl.SSLError:
             return d.rstrip()+","+getrev(d)+","+"CERT ERROR!"
           except socket.gaierror:
