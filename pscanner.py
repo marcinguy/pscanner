@@ -50,7 +50,6 @@ def scan(d):
                   message += ","+val[i]
                   return message
                 except Exception, e:
-                       print str(e)
                        return d.rstrip()+","+getrev(d)+","+"CERT ERROR!"
           except ssl.SSLError:
             return d.rstrip()+","+getrev(d)+","+"CERT ERROR!"
