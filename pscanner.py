@@ -38,7 +38,7 @@ def scan(d):
                 message = "Error: "+d.rstrip()+","+getrev(d)
                 message += str(e)
                 try: 
-                  cert = ssl.get_server_certificate((d.rstrip(), 443), ssl_version=ssl.PROTOCOL_TLSv1)
+                  cert = ssl.get_server_certificate((d, 443), ssl_version=ssl.PROTOCOL_TLSv1)
                   x509 = M2Crypto.X509.load_cert_string(cert)
                   r = x509.get_subject().as_text()
                   val = r.split(",")
