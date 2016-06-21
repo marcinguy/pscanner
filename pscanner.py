@@ -18,26 +18,26 @@ import sys
 
 import M2Crypto
 from embparpbar import ProgressPool
-from progressbar import ProgressBar, RotatingMarker, ETA
 
+
+import pprint
 
 
 
 
 def scan(d):
-        
-        if(sslp=="yes"): 
+        if(sslp=="yes"):
           s_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	  s = ssl.wrap_socket(s_, ca_certs='/usr/local/lib/python2.7/dist-packages/requests/cacert.pem',cert_reqs=ssl.CERT_OPTIONAL)
- 
+          s = ssl.wrap_socket(s_, ca_certs='/usr/local/lib/python2.7/dist-packages/requests/cacert.pem',cert_reqs=ssl.CERT_OPTIONAL)
+
           s.settimeout(0.1)
-          d=str(d) 
+          d=str(d)
           try:
             result = s.connect_ex((d, int(port)))
           except Exception, e:
                 message = "Error: "+d.rstrip()+","+getrev(d)
                 message += str(e)
-                try: 
+                try:
                   cert = ssl.get_server_certificate((d, 443), ssl_version=ssl.PROTOCOL_TLSv1)
                   x509 = M2Crypto.X509.load_cert_string(cert)
                   r = x509.get_subject().as_text()
@@ -46,7 +46,6 @@ def scan(d):
                     if j.find("CN=") != -1:
                       val[i]=j.replace("CN=","")
                       val[i]=val[i].strip()
-                
                   message += ","+val[i]
                   return message
                 except Exception, e:
@@ -67,9 +66,7 @@ def scan(d):
             else:
               subject = "None"
               issued_to = "None"
-
-          return d.rstrip()+","+getrev(d)+","+"CN:"+issued_to+","+"CERT OK"
- 
+            return d.rstrip()+","+getrev(d)+","+"CN:"+issued_to+","+"CERT OK"
         if(sslp=="no"):
           d=str(d)
           try:
@@ -81,12 +78,10 @@ def scan(d):
             message = "Error: "+d.rstrip()+","+getrev(d)
             message += str(e)
             return message
-   
           if result:
             return d.rstrip()+","+port+",closed"
           else:
             return d.rstrip()+","+port+",open"
- 
 
 
 def getrev(ip):
@@ -115,8 +110,7 @@ if __name__ == '__main__':
         parser.add_argument('-p','--port', help='Port number(s)', required=True)
         parser.add_argument('-s','--ssl', help='SSL yes|no', required=True)
         args = parser.parse_args()
-        
-        input = args.input 
+        input = args.input
         output = args.output
         port = args.port
         sslp = args.ssl
@@ -126,6 +120,7 @@ if __name__ == '__main__':
 
 
         results = ppool.map(scan, data, pbar="Scanning")
-        resfile = open(output,'w') 
-	for r in results:
-          resfile.write(r+"\n") 
+        pprint.pprint(results)
+        resfile = open(output,'w')
+        for r in results:
+          resfile.write(r+"\n")
