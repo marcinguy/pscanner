@@ -27,6 +27,9 @@ import pprint
 
 def scan(d):
         if(sslp=="yes"):
+          print d
+          d=str(getip(str((d))))
+          print d
           s_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
           s = ssl.wrap_socket(s_, ca_certs='/usr/local/lib/python2.7/dist-packages/requests/cacert.pem',cert_reqs=ssl.CERT_OPTIONAL)
 
@@ -93,13 +96,39 @@ def getrev(ip):
         resolverobj.lifetime = 1
         reversed_dns = str(resolverobj.query(rev_name,"PTR")[0])
         reversed_dns = reversed_dns[:-1]
-        return reversed_dns
+        
+        if reversed_dns is None:
+          return "none"
+        else:
+          return reversed_dns[:-1]
       except resolver.NXDOMAIN:
         return "unknown"
       except resolver.Timeout:
         return "Timed out while resolving %s" % ip.rstrip()
-      except exception.DNSException:
-        return "Unhandled exception"
+      except Exception, e:
+        message = "Error: "+d.rstrip()+","+getrev(d)
+        message += str(e)
+        return message
+
+def getip(name):
+
+      try:
+        resolverobj = resolver.Resolver()
+        resolverobj.timeout = 1
+        resolverobj.lifetime = 1
+        ip = str(resolverobj.query(name[:-1],"A")[0])
+        if ip is None:
+          return "none"
+        else:
+          return ip[:-1]
+      except resolver.Timeout:
+        return "Timed out while resolving %s" % ip.rstrip()
+      except Exception, e:
+        message = "Error: "+name.rstrip()
+        message += str(e)
+        return message
+
+ 
 
 
 
@@ -118,9 +147,8 @@ if __name__ == '__main__':
         # Create pool (ppool)
         ppool = ProgressPool()
 
-
         results = ppool.map(scan, data, pbar="Scanning")
         pprint.pprint(results)
         resfile = open(output,'w')
         for r in results:
-          resfile.write(r+"\n")
+          resfile.write(str(r)+"\n")
