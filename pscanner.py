@@ -65,7 +65,6 @@ def scan(d):
           except socket.error:
             return d.rstrip()+","+"SOCKET ERROR!"
           if result:
-            print d+"No SSL"
             return "No SSL"
           else:
             cert = s.getpeercert()
@@ -75,7 +74,6 @@ def scan(d):
             else:
               subject = "None"
               issued_to = "None"
-            print  d.rstrip()+","+getrev(d)+","+"CN:"+issued_to+","+"CERT OK"
             return d.rstrip()+","+getrev(d)+","+"CN:"+issued_to+","+"CERT OK"
         if(sslp=="no"):
           d=str(d)
@@ -95,7 +93,9 @@ def scan(d):
 
 
 def getrev(ip):
-      print "getrev"
+      ip=make_ip(str(ip))
+
+      
       try:
         rev_name = reversename.from_address(str(ip.rstrip()))
         resolverobj = resolver.Resolver()
@@ -118,7 +118,6 @@ def getrev(ip):
         return message
 
 def getip(name):
-      print getip
       try:
         resolverobj = resolver.Resolver()
         resolverobj.timeout = 1
