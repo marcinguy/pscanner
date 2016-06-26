@@ -21,15 +21,21 @@ from embparpbar import ProgressPool
 
 
 import pprint
+import re
 
 
-
+def make_ip(v):
+    is_valid = re.match("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", v)
+    if is_valid:
+      return v
+    else:
+      return str(getip(v))
 
 def scan(d):
+        print d
+        d=make_ip(str(d))
+        print d
         if(sslp=="yes"):
-          print d
-          d=str(getip(str((d))))
-          print d
           s_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
           s = ssl.wrap_socket(s_, ca_certs='/usr/local/lib/python2.7/dist-packages/requests/cacert.pem',cert_reqs=ssl.CERT_OPTIONAL)
 
@@ -60,6 +66,7 @@ def scan(d):
           except socket.error:
             return d.rstrip()+","+"SOCKET ERROR!"
           if result:
+            print "No SSL"
             return "No SSL"
           else:
             cert = s.getpeercert()
@@ -69,6 +76,7 @@ def scan(d):
             else:
               subject = "None"
               issued_to = "None"
+            print  d.rstrip()+","+getrev(d)+","+"CN:"+issued_to+","+"CERT OK"
             return d.rstrip()+","+getrev(d)+","+"CN:"+issued_to+","+"CERT OK"
         if(sslp=="no"):
           d=str(d)
@@ -116,13 +124,11 @@ def getip(name):
         resolverobj = resolver.Resolver()
         resolverobj.timeout = 1
         resolverobj.lifetime = 1
-        ip = str(resolverobj.query(name[:-1],"A")[0])
+        ip = str(resolverobj.query(name,"A")[0])
         if ip is None:
           return "none"
         else:
-          return ip[:-1]
-      except resolver.Timeout:
-        return "Timed out while resolving %s" % ip.rstrip()
+          return ip
       except Exception, e:
         message = "Error: "+name.rstrip()
         message += str(e)
@@ -143,7 +149,10 @@ if __name__ == '__main__':
         output = args.output
         port = args.port
         sslp = args.ssl
-        data = open(input,'rU')
+        with open(input,'rU') as f:
+          lines = f.read().splitlines()
+        data = lines
+
         # Create pool (ppool)
         ppool = ProgressPool()
 
