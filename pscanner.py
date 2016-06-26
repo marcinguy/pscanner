@@ -32,9 +32,8 @@ def make_ip(v):
       return str(getip(v))
 
 def scan(d):
-        print d
-        d=make_ip(str(d))
-        print d
+        ip=make_ip(str(d))
+
         if(sslp=="yes"):
           s_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
           s = ssl.wrap_socket(s_, ca_certs='/usr/local/lib/python2.7/dist-packages/requests/cacert.pem',cert_reqs=ssl.CERT_OPTIONAL)
@@ -42,7 +41,7 @@ def scan(d):
           s.settimeout(0.1)
           d=str(d)
           try:
-            result = s.connect_ex((d, int(port)))
+            result = s.connect_ex((ip, int(port)))
           except Exception, e:
                 message = "Error: "+d.rstrip()+","+getrev(d)
                 message += str(e)
@@ -66,7 +65,7 @@ def scan(d):
           except socket.error:
             return d.rstrip()+","+"SOCKET ERROR!"
           if result:
-            print "No SSL"
+            print d+"No SSL"
             return "No SSL"
           else:
             cert = s.getpeercert()
@@ -83,7 +82,7 @@ def scan(d):
           try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(0.1)
-            result = s.connect_ex((d, int(port)))
+            result = s.connect_ex((ip, int(port)))
             s.close()
           except Exception, e:
             message = "Error: "+d.rstrip()+","+getrev(d)
@@ -96,7 +95,7 @@ def scan(d):
 
 
 def getrev(ip):
-
+      print "getrev"
       try:
         rev_name = reversename.from_address(str(ip.rstrip()))
         resolverobj = resolver.Resolver()
@@ -108,18 +107,18 @@ def getrev(ip):
         if reversed_dns is None:
           return "none"
         else:
-          return reversed_dns[:-1]
+          return reversed_dns
       except resolver.NXDOMAIN:
         return "unknown"
       except resolver.Timeout:
         return "Timed out while resolving %s" % ip.rstrip()
       except Exception, e:
-        message = "Error: "+d.rstrip()+","+getrev(d)
+        message = "Error: "+ip.rstrip()
         message += str(e)
         return message
 
 def getip(name):
-
+      print getip
       try:
         resolverobj = resolver.Resolver()
         resolverobj.timeout = 1
@@ -154,10 +153,12 @@ if __name__ == '__main__':
         data = lines
 
         # Create pool (ppool)
-        ppool = ProgressPool()
+        ppool = ProgressPool(1)
 
         results = ppool.map(scan, data, pbar="Scanning")
         pprint.pprint(results)
+        #for line in data:
+        #  results = scan(line)
         resfile = open(output,'w')
         for r in results:
           resfile.write(str(r)+"\n")
