@@ -152,10 +152,10 @@ if __name__ == '__main__':
         data = lines
 
         # Create pool (ppool)
-        ppool = ProgressPool(1)
+        ppool = ProgressPool()
 
         results = ppool.map(scan, data, pbar="Scanning")
-        pprint.pprint(results)
+        #pprint.pprint(results)
         #for line in data:
         #  results = scan(line)
         resfile = open(output,'w')
