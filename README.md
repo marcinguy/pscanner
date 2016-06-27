@@ -1,10 +1,10 @@
 # Parallel IP Scanner
 
-Parallel IP scanner with progressbar and SSL support
+Parallel IP port scanner with progressbar and SSL support
 
 ## Description
 
-Parallel IP scanner with progressbar and SSL support. Cut the scan time based on the amount of the cores installed on your computer.
+Parallel IP port scanner with progressbar and SSL support. Cut the scan time based on the amount of the cores installed on your computer.
 
 ![](images/pscanner.png)
 
