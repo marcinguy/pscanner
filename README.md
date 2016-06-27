@@ -6,6 +6,8 @@ Parallel IP scanner with progressbar and SSL support
 
 Parallel IP scanner with progressbar and SSL support. Cut the scan time based on the amount of the cores installed on your computer.
 
+![](images/pscanner.png)
+
 ## Dependencies
 
 
