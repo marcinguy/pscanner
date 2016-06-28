@@ -50,6 +50,10 @@ optional arguments:
 
 ```
 
+marcin@marcin-lap:~/pscanner$ more ips.txt 
+127.0.0.1
+www.gmail.com
+www.google.com
 marcin@marcin-lap:~/pscanner$ ./pscanner.py -i ips.txt -o out.txt -p 442-445 -s yes
 Scanning: 100%|###################################################|Time: 0:00:00
 marcin@marcin-lap:~/pscanner$ more out.txt 
