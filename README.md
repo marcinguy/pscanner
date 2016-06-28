@@ -39,11 +39,12 @@ Port Scanner v0.99
 optional arguments:
   -h, --help            show this help message and exit
   -i INPUT, --input INPUT
-                        Input list of IPs
+                        Input list of IPs or domains
   -o OUTPUT, --output OUTPUT
                         Output
-  -p PORT, --port PORT  Port number(s)
+  -p PORT, --port PORT  Port number(s). Range, i.e 20-1000 or comma seperated
   -s SSL, --ssl SSL     SSL yes|no
+
 ```
 
 ## Sample run:
