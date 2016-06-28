@@ -46,6 +46,29 @@ optional arguments:
   -s SSL, --ssl SSL     SSL yes|no
 ```
 
+## Sample run:
+
+```
+
+marcin@marcin-lap:~/pscanner$ ./pscanner.py -i ips.txt -o out.txt -p 442-445 -s yes
+Scanning: 100%|###################################################|Time: 0:00:00
+marcin@marcin-lap:~/pscanner$ more out.txt 
+127.0.0.1,442,closed
+127.0.0.1,443,closed
+127.0.0.1,444,closed
+127.0.0.1,445,closed
+www.gmail.com,442,closed
+www.gmail.com,443,open,CN:mail.google.com,CERT OK
+www.gmail.com,444,closed
+www.gmail.com,445,closed
+www.google.com,442,closed
+www.google.com,443,open,CN:www.google.com,CERT OK
+www.google.com,444,closed
+www.google.com,445,closed
+
+```
+
+
 ## Website
 
 Repository is at: https://gitlab.com/marcinguy/pscanner
