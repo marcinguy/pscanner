@@ -219,7 +219,7 @@ def getip(name):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Port Scanner v0.99')
     parser.add_argument(
-        '-i', '--input', help='Input list of IPs', required=True)
+        '-i', '--input', help='Input list of IPs or domains', required=True)
     parser.add_argument('-o', '--output', help='Output', required=True)
     parser.add_argument('-p', '--port', help='Port number(s). Range, i.e 20-1000 or comma seperated', required=True)
     parser.add_argument('-s', '--ssl', help='SSL yes|no', required=True)
