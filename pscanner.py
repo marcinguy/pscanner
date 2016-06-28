@@ -82,12 +82,12 @@ def scan(d):
                     subject = dict(x[0] for x in cert['subject'])
                     issued_to = subject['commonName']
                     func_result.append(
-                        d.rstrip() + "," + "CN:" + issued_to + "," + "CERT OK")
+                        d.rstrip() + "," + str(sport)+",open,"+"CN:" + issued_to + "," + "CERT OK")
                   else:
                     subject = "None"
                     issued_to = "None"
                     func_result.append(
-                        d.rstrip() + "," + "CN:" + issued_to + "," + "CERT OK")
+                        d.rstrip() + "," + str(sport)+",open,"+"CN:" + issued_to + "," + "CERT OK")
             if (sslp == "no"):
                 d = str(d)
                 try:
@@ -149,12 +149,12 @@ def scan(d):
                     subject = dict(x[0] for x in cert['subject'])
                     issued_to = subject['commonName']
                     func_result.append(
-                        d.rstrip() + "," + "CN:" + issued_to + "," + "CERT OK")
+                        d.rstrip() + "," + str(sport) +",open,"+ "CN:" + issued_to + "," + "CERT OK")
                   else:
                     subject = "None"
                     issued_to = "None"
                     func_result.append(
-                        d.rstrip() + "," + "CN:" + issued_to + "," + "CERT OK")
+                        d.rstrip() + "," + str(sport) +",open,"+ "CN:" + issued_to + "," + "CERT OK")
             if (sslp == "no"):
                 d = str(d)
                 try:
