@@ -49,8 +49,9 @@ def scan(d):
                 try:
                     result = s.connect_ex((ip, int(sport)))
                 except Exception, e:
-                    message = "Error: " + d.rstrip() + "," + getrev(d)
+                    message = "Error: " + d.rstrip()
                     message += str(e)
+                    func_result.append(message)
                     try:
                         cert = ssl.get_server_certificate(
                             (d, sport), ssl_version=ssl.PROTOCOL_TLSv1)
@@ -65,28 +66,28 @@ def scan(d):
                         func_result.append(message)
                     except Exception, e:
                         func_result.append(
-                            d.rstrip() + "," + getrev(d) + "," + "CERT ERROR!")
+                            d.rstrip() + "," + "CERT ERROR!")
                     except ssl.SSLError:
                         func_result.append(
-                            d.rstrip() + "," + getrev(d) + "," + "CERT ERROR!")
+                            d.rstrip() + ","  + "CERT ERROR!")
                     except socket.gaierror:
                         func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
                     except socket.error:
                         func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
                 if result:
-                  func_result.append("No SSL")
+                  func_result.append(d+","+str(sport)+",closed")
                 else:
                   cert = s.getpeercert()
                   if cert:
                     subject = dict(x[0] for x in cert['subject'])
                     issued_to = subject['commonName']
                     func_result.append(
-                        d.rstrip() + "," + getrev(d) + "," + "CN:" + issued_to + "," + "CERT OK")
+                        d.rstrip() + "," + "CN:" + issued_to + "," + "CERT OK")
                   else:
                     subject = "None"
                     issued_to = "None"
                     func_result.append(
-                        d.rstrip() + "," + getrev(d) + "," + "CN:" + issued_to + "," + "CERT OK")
+                        d.rstrip() + "," + "CN:" + issued_to + "," + "CERT OK")
             if (sslp == "no"):
                 d = str(d)
                 try:
@@ -115,7 +116,7 @@ def scan(d):
                 try:
                     result = s.connect_ex((ip, int(sport)))
                 except Exception, e:
-                    message = "Error: " + d.rstrip() + "," + getrev(d)
+                    message = "Error: " + d.rstrip()
                     message += str(e)
                     func_result.append(message)
                     try:
@@ -141,7 +142,7 @@ def scan(d):
                     except socket.error:
                         func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
                 if result:
-                  func_result.append("No SSL")
+                  func_result.append(d+","+str(sport)+",closed")
                 else:
                   cert = s.getpeercert()
                   if cert:
@@ -244,10 +245,10 @@ if __name__ == '__main__':
     # Create pool (ppool)
     ppool = ProgressPool()
 
-    #results = ppool.map(scan, data, pbar="Scanning")
+    results = ppool.map(scan, data, pbar="Scanning")
     # pprint.pprint(results)
-    for line in data:
-        results = scan(line)
+    #for line in data:
+    #    results = scan(line)
     resfile = open(output, 'w')
     for r in results:
-        resfile.write(str(r) + "\n")
+        resfile.write(str("\n".join(r)) + "\n")
