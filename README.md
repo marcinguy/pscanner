@@ -47,7 +47,7 @@ optional arguments:
 
 ```
 
-## Sample run:
+## Sample run
 
 ```
 
