@@ -67,13 +67,17 @@ def scan(d):
                     except Exception, e:
                         func_result.append(
                             d.rstrip() + "," + "CERT ERROR!")
+                        return func_result
                     except ssl.SSLError:
                         func_result.append(
                             d.rstrip() + ","  + "CERT ERROR!")
+                        return func_result
                     except socket.gaierror:
                         func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
+                        return func_result
                     except socket.error:
                         func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
+                        return func_result
                 if result:
                   func_result.append(d+","+str(sport)+",closed")
                 else:
@@ -99,6 +103,7 @@ def scan(d):
                     message = "Error: " + d.rstrip() + "," + getrev(d)
                     message += str(e)
                     func_result.append(message)
+                    return func_result
                 if result:
                     func_result.append(d.rstrip() + "," + str(sport) + ",closed")
                 else:
@@ -134,13 +139,17 @@ def scan(d):
                     except Exception, e:
                         func_result.append(
                             d.rstrip() + "," + "," + "CERT ERROR!")
+                        return func_result
                     except ssl.SSLError:
                         func_result.append(
                             d.rstrip() + "," + "," + "CERT ERROR!")
+                        return func_result
                     except socket.gaierror:
                         func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
+                        return func_result
                     except socket.error:
                         func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
+                        return func_result
                 if result:
                   func_result.append(d+","+str(sport)+",closed")
                 else:
@@ -166,11 +175,50 @@ def scan(d):
                   message = "Error: " + d.rstrip() + "," + getrev(d)
                   message += str(e)
                   func_result.append(message)
+                  return func_result
                 if result:
                   func_result.append(d.rstrip() + "," + str(sport) + ",closed")
                 else:
                   func_result.append(d.rstrip() + "," + str(sport) + ",open")
 
+    if (portcomma_flag == 0 & portcomma_flag == 0):
+        sport = port
+        if (sslp == "yes"):
+            s_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s = ssl.wrap_socket(
+                s_, ca_certs='/usr/local/lib/python2.7/dist-packages/requests/cacert.pem',
+                cert_reqs=ssl.CERT_OPTIONAL)
+            s.settimeout(0.1)
+            d = str(d)
+            try:
+                result = s.connect_ex((ip, int(sport)))
+            except Exception, e:
+                message = d.rstrip() + ",open,Error:"
+                message += str(e)
+                func_result.append(message)
+                return func_result
+            if result:
+                func_result.append(d.rstrip() + "," + str(sport) + ",closed")
+            else:
+
+                func_result.append(
+                    d.rstrip() + "," + str(sport) + ",open")
+        if (sslp == "no"):
+            d = str(d)
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.settimeout(0.1)
+                result = s.connect_ex((ip, int(sport)))
+                s.close()
+            except Exception, e:
+                message = "Error: " + d.rstrip()
+                message += str(e)
+                func_result.append(message)
+                return func_result
+            if result:
+                func_result.append(d.rstrip() + "," + str(sport) + ",closed")
+            else:
+                func_result.append(d.rstrip() + "," + str(sport) + ",open")
 
     return func_result
 
