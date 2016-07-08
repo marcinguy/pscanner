@@ -23,16 +23,18 @@ import re
 
 
 def make_ip(v):
-    is_valid = re.match(
-        "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", v)
-    if is_valid:
+    try:
+        socket.inet_aton(v)
         return v
-    else:
-        return str(getip(v))
+    except:
+        return getip(v)
 
 
 def scan(d):
+    
+    print "scanning:"+str(d)+"\n"
     ip = make_ip(str(d))
+    ip = d
 
     func_result = list()
     cert = 0
@@ -100,7 +102,7 @@ def scan(d):
                     result = s.connect_ex((ip, int(sport)))
                     s.close()
                 except Exception, e:
-                    message = "Error: " + d.rstrip() + "," + getrev(d)
+                    message = "Error: " + d.rstrip()
                     message += str(e)
                     func_result.append(message)
                     return func_result
@@ -172,7 +174,7 @@ def scan(d):
                   result = s.connect_ex((ip, int(sport)))
                   s.close()
                 except Exception, e:
-                  message = "Error: " + d.rstrip() + "," + getrev(d)
+                  message = "Error: " + d.rstrip()
                   message += str(e)
                   func_result.append(message)
                   return func_result
@@ -181,7 +183,7 @@ def scan(d):
                 else:
                   func_result.append(d.rstrip() + "," + str(sport) + ",open")
 
-    if (portcomma_flag == 0 & portcomma_flag == 0):
+    if(portcomma_flag == 0 & portcomma_flag == 0):
         sport = port
         if (sslp == "yes"):
             s_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -202,7 +204,7 @@ def scan(d):
             else:
 
                 func_result.append(
-                    d.rstrip() + "," + str(sport) + ",open")
+                        d.rstrip() + "," + str(sport) + ",open" )
         if (sslp == "no"):
             d = str(d)
             try:
@@ -214,7 +216,6 @@ def scan(d):
                 message = "Error: " + d.rstrip()
                 message += str(e)
                 func_result.append(message)
-                return func_result
             if result:
                 func_result.append(d.rstrip() + "," + str(sport) + ",closed")
             else:
@@ -291,7 +292,7 @@ if __name__ == '__main__':
     data = lines
 
     # Create pool (ppool)
-    ppool = ProgressPool()
+    ppool = ProgressPool(1000)
 
     results = ppool.map(scan, data, pbar="Scanning")
     # pprint.pprint(results)
