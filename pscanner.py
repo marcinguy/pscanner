@@ -195,16 +195,65 @@ def scan(d):
             try:
                 result = s.connect_ex((ip, int(sport)))
             except Exception, e:
-                message = d.rstrip() + ",open,Error:"
+                message = "Error: " + d.rstrip()
+                message += str(e)
+                func_result.append(message)
+                try:
+                    cert = ssl.get_server_certificate(
+                        (d, int(sport)), ssl_version=ssl.PROTOCOL_TLSv1)
+                    x509 = M2Crypto.X509.load_cert_string(cert)
+                    r = x509.get_subject().as_text()
+                    val = r.split(",")
+                    for i, j in enumerate(val):
+                        if j.find("CN=") != -1:
+                            val[i] = j.replace("CN=", "")
+                            val[i] = val[i].strip()
+                    message += "," + val[i]
+                    func_result.append(message)
+                except Exception, e:
+                    func_result.append(
+                        d.rstrip() + "," + "," + "CERT ERROR!")
+                    return func_result
+                except ssl.SSLError:
+                    func_result.append(
+                        d.rstrip() + "," + "," + "CERT ERROR!")
+                    return func_result
+                except socket.gaierror:
+                    func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
+                    return func_result
+                except socket.error:
+                    func_result.append(d.rstrip() + "," + "SOCKET ERROR!")
+                    return func_result
+            if result:
+                func_result.append(d + "," + str(sport) + ",closed")
+            else:
+                cert = s.getpeercert()
+                if cert:
+                    subject = dict(x[0] for x in cert['subject'])
+                    issued_to = subject['commonName']
+                    func_result.append(
+                        d.rstrip() + "," + str(sport) + ",open," + "CN:" + issued_to + "," + "CERT OK")
+                else:
+                    subject = "None"
+                    issued_to = "None"
+                    func_result.append(
+                        d.rstrip() + "," + str(sport) + ",open," + "CN:" + issued_to + "," + "CERT OK")
+        if (sslp == "no"):
+            d = str(d)
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.settimeout(0.1)
+                result = s.connect_ex((ip, int(sport)))
+                s.close()
+            except Exception, e:
+                message = "Error: " + d.rstrip()
                 message += str(e)
                 func_result.append(message)
                 return func_result
             if result:
                 func_result.append(d.rstrip() + "," + str(sport) + ",closed")
             else:
-
-                func_result.append(
-                        d.rstrip() + "," + str(sport) + ",open" )
+                func_result.append(d.rstrip() + "," + str(sport) + ",open")
         if (sslp == "no"):
             d = str(d)
             try:
